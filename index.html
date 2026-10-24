@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>沐子 · 法务与合规</title>
+<meta name="description" content="沐子的小站：做一些能用的小工具。">
+<style>
+  :root{
+    --bg:#f5f8fb;
+    --surface:#ffffff;
+    --text:#141a20;
+    --muted:#5d6b77;
+    --faint:#8695a1;
+    --border:#dde6ee;
+    --accent:#2a6d9c;
+    --accent-soft:#e6f1f8;
+    --tag-bg:#edf3f8;
+    --veil:rgba(240,248,252,0.62);
+    --bgimg:url("assets/bg-water.jpg");
+    --shadow:0 1px 2px rgba(23,52,71,.06), 0 10px 26px rgba(23,52,71,.07);
+    --shadow-hover:0 1px 2px rgba(23,52,71,.08), 0 14px 34px rgba(23,52,71,.12);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#0f151b;
+      --surface:#161f27;
+      --text:#eaf0f5;
+      --muted:#9babb8;
+      --faint:#71828e;
+      --border:#26323c;
+      --accent:#6fb6e0;
+      --accent-soft:#132a38;
+      --tag-bg:#1d2831;
+      --veil:rgba(9,15,21,0.58);
+      --bgimg:url("assets/bg-water-dark.jpg");
+      --shadow:0 1px 2px rgba(0,0,0,.30), 0 10px 26px rgba(0,0,0,.28);
+      --shadow-hover:0 1px 2px rgba(0,0,0,.34), 0 14px 34px rgba(0,0,0,.38);
+    }
+  }
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;background:var(--bg);}
+  /* 背景：波光粼粼的水面，压淡到只留一点光影，不影响阅读 */
+  body::before{
+    content:"";
+    position:fixed;
+    top:0;right:0;bottom:0;left:0;
+    z-index:-2;
+    background:var(--bgimg) center center / cover no-repeat;
+    pointer-events:none;
+  }
+  body::after{
+    content:"";
+    position:fixed;
+    top:0;right:0;bottom:0;left:0;
+    z-index:-1;
+    background:var(--veil);
+    pointer-events:none;
+  }
+  body{
+    margin:0;
+    background:transparent;
+    color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,sans-serif;
+    font-size:16px;
+    line-height:1.75;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:760px;margin:0 auto;padding:0 24px;}
+
+  header{padding:88px 0 44px;}
+  .eyebrow{
+    display:inline-block;
+    font-size:13px;
+    letter-spacing:.06em;
+    color:var(--accent);
+    background:var(--accent-soft);
+    padding:3px 10px;
+    border-radius:999px;
+    margin-bottom:20px;
+  }
+  h1{
+    font-size:40px;
+    line-height:1.2;
+    font-weight:600;
+    letter-spacing:-0.01em;
+    margin:0 0 16px;
+  }
+  .lede{
+    font-size:18px;
+    line-height:1.7;
+    color:var(--text);
+    margin:0 0 10px;
+  }
+  .sub{
+    font-size:15px;
+    color:var(--muted);
+    margin:0;
+    max-width:560px;
+  }
+  .sub + .sub{margin-top:10px;}
+  .links{margin-top:28px;display:flex;flex-wrap:wrap;gap:10px;}
+  .links a{
+    display:inline-block;
+    font-size:14px;
+    text-decoration:none;
+    color:var(--text);
+    border:1px solid var(--border);
+    background:var(--surface);
+    padding:7px 14px;
+    border-radius:8px;
+    transition:border-color .15s,color .15s;
+  }
+  .links a:hover{border-color:var(--accent);color:var(--accent);}
+  /* 邮箱按钮：常驻下划线，暗示「可以点」 */
+  .links a.mail{
+    text-decoration:underline;
+    text-decoration-thickness:1px;
+    text-underline-offset:3px;
+    text-decoration-color:var(--faint);
+    transition:border-color .15s,color .15s,text-decoration-color .15s;
+  }
+  .links a.mail:hover{text-decoration-color:var(--accent);}
+
+  section{padding:8px 0 48px;}
+  h2{
+    font-size:13px;
+    letter-spacing:.1em;
+    font-weight:600;
+    color:var(--faint);
+    text-transform:uppercase;
+    margin:0 0 22px;
+    padding-bottom:12px;
+    border-bottom:1px solid var(--border);
+  }
+
+  .card{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:12px;
+    margin-bottom:20px;
+    overflow:hidden;
+    box-shadow:var(--shadow);
+    transition:border-color .15s,box-shadow .15s;
+  }
+  .card:hover{border-color:#c2d3de;box-shadow:var(--shadow-hover);}
+  @media (prefers-color-scheme: dark){ .card:hover{border-color:#3a4b57;} }
+
+  .thumb{display:block;background:var(--tag-bg);border-bottom:1px solid var(--border);}
+  .thumb img{
+    display:block;
+    width:100%;
+    aspect-ratio:16/10;
+    object-fit:cover;
+    object-position:top center;
+  }
+  a.thumb{position:relative;}
+  a.thumb::after{
+    content:"";
+    position:absolute;inset:0;
+    background:rgba(0,0,0,0);
+    transition:background .18s;
+  }
+  a.thumb:hover::after{background:rgba(0,0,0,.10);}
+
+  .card .body{padding:22px 24px 24px;}
+  .card h3{
+    font-size:18px;
+    font-weight:600;
+    margin:0 0 6px;
+    line-height:1.4;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .card h3 .ico{
+    font-size:17px;
+    line-height:1;
+    flex:none;
+  }
+  .card .role{
+    font-size:14px;
+    color:var(--accent);
+    margin:0 0 14px;
+  }
+
+  .steps{
+    list-style:none;
+    counter-reset:s;
+    margin:0 0 16px;
+    padding:0;
+  }
+  .steps li{
+    counter-increment:s;
+    position:relative;
+    padding-left:28px;
+    margin-bottom:8px;
+    font-size:14.5px;
+    line-height:1.65;
+    color:var(--muted);
+  }
+  .steps li:last-child{margin-bottom:0;}
+  .steps li::before{
+    content:counter(s);
+    position:absolute;
+    left:0;
+    top:2px;
+    width:19px;
+    height:19px;
+    border-radius:50%;
+    background:var(--accent-soft);
+    color:var(--accent);
+    font-size:11px;
+    font-weight:700;
+    line-height:19px;
+    text-align:center;
+  }
+  .steps strong{color:var(--text);font-weight:600;}
+
+  .tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;}
+  .tags span{
+    font-size:12px;
+    color:var(--muted);
+    background:var(--tag-bg);
+    padding:2px 9px;
+    border-radius:999px;
+  }
+  .card .go{display:flex;flex-wrap:wrap;gap:18px;}
+  .card .go a{
+    font-size:14px;
+    color:var(--accent);
+    text-decoration:none;
+    border-bottom:1px solid transparent;
+  }
+  .card .go a:hover{border-bottom-color:var(--accent);}
+  .card .go .plain{font-size:14px;color:var(--faint);}
+
+  footer{
+    padding:32px 0 64px;
+    border-top:1px solid var(--border);
+    margin-top:16px;
+    font-size:13px;
+    color:var(--faint);
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:8px;
+  }
+  footer a{color:var(--faint);text-decoration:none;}
+  footer a:hover{color:var(--accent);}
+
+  .credit{
+    font-size:11px;
+    line-height:1.7;
+    color:var(--faint);
+    margin:0;
+    padding:0 0 44px;
+  }
+  .credit a{
+    color:var(--faint);
+    text-decoration:underline;
+    text-decoration-thickness:1px;
+    text-underline-offset:2px;
+    text-decoration-color:var(--border);
+  }
+  .credit a:hover{color:var(--accent);text-decoration-color:var(--accent);}
+
+  @media (max-width:600px){
+    header{padding:56px 0 40px;}
+    h1{font-size:30px;}
+    .lede{font-size:16px;}
+    .card .body{padding:18px 18px 20px;}
+    .steps li{font-size:14px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <span class="eyebrow">法务 / AI 合规</span>
+    <h1>沐子</h1>
+    <p class="lede">欢迎来到这个拙稚的拂晓地，只是做一点东西出来，无问西东。</p>
+    <div class="links">
+      <a href="https://github.com/chloe20030501-hash" target="_blank" rel="noopener">GitHub</a>
+      <a id="mail-btn" class="mail" href="https://github.com/chloe20030501-hash" target="_blank" rel="noopener">邮箱</a>
+    </div>
+  </header>
+
+  <section>
+    <h2>项目作品</h2>
+
+    <article class="card">
+      <a class="thumb" href="https://chloe20030501-hash.github.io/game-ai-compliance-workbench/" target="_blank" rel="noopener">
+        <img src="assets/proj-compliance.jpg" alt="游戏 AI 合规工作台界面：左侧为场景步骤，中间为产品事实问卷，右侧为实时生成的法务工作底稿">
+      </a>
+      <div class="body">
+        <h3><span class="ico" aria-hidden="true">⚖️</span>游戏 AI 功能上线合规工作台</h3>
+        <p class="role">法务场景 · 前端原型</p>
+        <ol class="steps">
+          <li>选一个 AI 功能场景（如「AI 角色陪伴的跨对话记忆」），进入业务事实问卷</li>
+          <li>逐题回答产品问题，<strong>不确定就选「暂不清楚」</strong>——系统把它记为待确认，不替业务方猜答案</li>
+          <li>右侧同步生成法务工作底稿：已确认事实、待追问事项、初步关注点</li>
+          <li>导出事实确认表，交给产品与研发逐条签字确认</li>
+        </ol>
+        <div class="tags"><span>产品事实梳理</span><span>合规审查</span><span>浏览器本地运行</span></div>
+        <div class="go">
+          <a href="https://chloe20030501-hash.github.io/game-ai-compliance-workbench/" target="_blank" rel="noopener">在线体验</a>
+          <a href="https://github.com/chloe20030501-hash/game-ai-compliance-workbench" target="_blank" rel="noopener">源码</a>
+        </div>
+      </div>
+    </article>
+
+    <article class="card">
+      <a class="thumb" href="https://chloe20030501-hash.github.io/life-blocks/" target="_blank" rel="noopener">
+        <img src="assets/proj-life-blocks.jpg" alt="生活积木界面：顶部是今日进度与到期事项，下方按晨间等时段列出可勾选的生活事项">
+      </a>
+      <div class="body">
+        <h3><span class="ico" aria-hidden="true">🧱</span>生活积木 Life Blocks</h3>
+        <p class="role">个人工具 · 静态网页</p>
+        <ol class="steps">
+          <li>把一天分成七段，从晨间到睡前，每段放自己要做的具体事</li>
+          <li>用三种积木区分事项：<strong>方框是必做、圆形是可选、三角是提醒</strong></li>
+          <li>顶部进度<strong>只统计方框里的必做项</strong>，可选的事完成了也不占用分数线</li>
+          <li>数据只存在自己浏览器里，可一键导出备份，换设备自己导入</li>
+        </ol>
+        <div class="tags"><span>HTML</span><span>localStorage</span><span>无构建步骤</span></div>
+        <div class="go">
+          <a href="https://chloe20030501-hash.github.io/life-blocks/" target="_blank" rel="noopener">在线体验</a>
+          <a href="https://github.com/chloe20030501-hash/life-blocks" target="_blank" rel="noopener">源码</a>
+        </div>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="thumb">
+        <img src="assets/proj-gift-tool.jpg" alt="王者送礼助手界面：左侧好友档案，右上写备注区，下方是送礼分析卡片与可赠送皮肤列表">
+      </div>
+      <div class="body">
+        <h3><span class="ico" aria-hidden="true">🎁</span>王者荣耀送礼助手</h3>
+        <p class="role">Python 工具 · 本地优先</p>
+        <ol class="steps">
+          <li>给好友建一份档案，写下他最近想要什么</li>
+          <li>工具自动识别提到的英雄与皮肤，加入关注</li>
+          <li>按四态判定能不能送：<strong>可送 / 返场可送 / 不可送 / 待确认</strong>，并给出判定依据</li>
+          <li>打开「送礼分析」，看现在就能送的皮肤，以及最近一次返场是几天后、还是已经过去几天</li>
+        </ol>
+        <div class="tags"><span>Python 标准库</span><span>规则引擎</span><span>离线可用</span></div>
+        <div class="go">
+          <a href="https://github.com/chloe20030501-hash/wzry-gift-tool" target="_blank" rel="noopener">源码</a>
+          <span class="plain">本地运行，无在线演示</span>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <footer>
+    <span>沐子 · 2026</span>
+    <span><a href="https://github.com/chloe20030501-hash" target="_blank" rel="noopener">github.com/chloe20030501-hash</a></span>
+  </footer>
+
+  <p class="credit">
+    背景图：<a href="https://commons.wikimedia.org/wiki/File:Arabian_sea_waves.jpg" target="_blank" rel="noopener">Arabian sea waves</a>
+    · 摄影 Galib Tufan ·
+    <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="noopener">CC BY-SA 4.0</a>
+    （本页已做缩放、柔化与调色）
+  </p>
+
+</div>
+
+<script>
+/* 邮箱防爬虫：源码中不出现完整地址，加载时拼装。
+   若 JS 不可用，该按钮保留为指向 GitHub 主页的链接，不会出现点了没反应的死链。 */
+(function(){
+  var a = document.getElementById('mail-btn');
+  if (!a || !window.atob) return;
+  try {
+    var u = atob('MjQxMjA4NjA2Nw==');
+    var d = atob('cXEuY29t');
+    var addr = u + '@' + d;
+    /* 按钮上只显示「邮箱」两个字，完整地址不出现在页面上，只写进 href */
+    a.href = 'mailto:' + addr;
+    a.title = '点击给沐子发邮件';
+    a.removeAttribute('target');
+    a.removeAttribute('rel');
+  } catch (e) {}
+})();
+</script>
+</body>
+</html>
